@@ -1,0 +1,3 @@
+[submodule "modules/godex"]
+	path = modules/godex
+	url = https://github.com/GodotECS/godex.git

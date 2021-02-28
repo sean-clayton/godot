@@ -2446,6 +2446,11 @@ bool Main::iteration() {
 
 	bool exit = false;
 
+#ifdef CUSTOM_ITERATOR
+	exit = custom_iteration(process_step, physics_step, &advance, time_scale);
+#endif
+
+#ifndef CUSTOM_PHYSICS_ITERATOR
 	Engine::get_singleton()->_in_physics = true;
 
 	for (int iters = 0; iters < advance.physics_steps; ++iters) {
@@ -2480,6 +2485,7 @@ bool Main::iteration() {
 	}
 
 	Engine::get_singleton()->_in_physics = false;
+#endif
 
 	uint64_t process_begin = OS::get_singleton()->get_ticks_usec();
 
@@ -2512,7 +2518,9 @@ bool Main::iteration() {
 		ScriptServer::get_language(i)->frame();
 	}
 
+#ifndef CUSTOM_AUDIO_ITERATOR
 	AudioServer::get_singleton()->update();
+#endif
 
 	if (EngineDebugger::is_active()) {
 		EngineDebugger::get_singleton()->iteration(frame_time, process_ticks, physics_process_ticks, physics_step);
